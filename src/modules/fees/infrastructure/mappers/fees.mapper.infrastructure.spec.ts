@@ -1,5 +1,4 @@
-import { FeesMapper } from './fees.mapper';
-import { FeesEstimateResponseDto } from '../dto/fees-estimate-response.dto';
+import { FeesMapper } from './fees.mapper.infrastructure';
 
 /** =============================================================
  * ANCHOR: fees-mapper-tests

@@ -24,9 +24,14 @@ describe('GetMfnQuantityUseCase', () => {
       sku: 'SKU-001-MX',
       marketplaceId: 'A1AM78C64UM0Y8',
     };
-    const spItem = { attributes: { fulfillment_availability: [
-      { marketplace_id: dto.marketplaceId, fulfillment_channel_code: 'DEFAULT', quantity: 7 },
-    ]}};
+    const spItem = {
+      fulfillmentAvailability: [
+        { marketplaceId: dto.marketplaceId, fulfillmentChannelCode: 'DEFAULT', quantity: 7 },
+      ],
+      offers: [
+        { marketplaceId: dto.marketplaceId, price: { amount: '99.99', currencyCode: 'MXN' } },
+      ],
+    };
     (listingsApi.getListingsItem as jest.Mock).mockResolvedValue(spItem);
     const result = await useCase.execute(dto);
     expect(result.quantity).toBe(7);
@@ -41,7 +46,7 @@ describe('GetMfnQuantityUseCase', () => {
     };
     const spItem = { attributes: { fulfillment_availability: [] }};
     (listingsApi.getListingsItem as jest.Mock).mockResolvedValue(spItem);
-    await expect(useCase.execute(dto)).rejects.toThrow('No hay fulfillment_availability para este SKU/marketplace (MFN).');
+    await expect(useCase.execute(dto)).rejects.toThrow('No hay fulfillment_availability u oferta para este SKU/marketplace (MFN).');
   });
 
   it('propaga errores del gateway', async () => {

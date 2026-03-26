@@ -1,4 +1,4 @@
-import { ListingsMapper } from './listings.mapper';
+import { ListingsMapper } from './listings.mapper.infrastructure';
 
 describe('ListingsMapper.mapMfnQuantity', () => {
   const marketplaceId = 'A1AM78C64UM0Y8';
