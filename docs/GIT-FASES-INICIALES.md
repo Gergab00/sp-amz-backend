@@ -4,7 +4,7 @@ Este documento define una reconstruccion logica del historial inicial del proyec
 
 ## Rama base
 
-- `iniciar`: rama de preparacion del historial inicial.
+- `dev`: rama de preparacion e integracion antes de master.
 - `master`: rama principal prevista para releases una vez terminada la base.
 
 ## Fases y commits
