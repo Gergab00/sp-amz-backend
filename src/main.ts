@@ -14,7 +14,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-
+import { apiReference } from '@scalar/express-api-reference';
 
 // ANCHOR: bootstrap
 /**
@@ -69,6 +69,14 @@ async function bootstrap() {
   // INFO: Genera el documento OpenAPI y lo monta en la aplicación.
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+
+  app.use(
+    '/api/scalar',
+    apiReference({
+      title: 'MarketSync SP-API Reference',
+      content: document,
+    }),
+  );
 
   //INFO: Sirve OpenAPI JSON como middleware de Express
   app.use('/api/docs-json', (req, res) => {
