@@ -5,20 +5,23 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Habilitar pnpm con Corepack para respetar pnpm-lock.yaml
+RUN corepack enable
 
-# Instalar dependencias de producción y desarrollo
-RUN npm ci
+# Copiar archivos mínimos para instalación reproducible
+COPY package.json pnpm-lock.yaml ./
+
+# Instalar dependencias exactas según lockfile
+RUN pnpm install --frozen-lockfile
 
 # Copiar código fuente
 COPY . .
 
 # Compilar aplicación TypeScript
-RUN npm run build
+RUN pnpm run build
 
-# Limpiar dependencias de desarrollo
-RUN npm prune --production
+# Dejar solo dependencias de producción
+RUN pnpm prune --prod
 
 # ===========================
 # Stage 2: Production
@@ -34,7 +37,7 @@ WORKDIR /app
 # Copiar node_modules y build desde stage anterior
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nestjs:nodejs /app/package.json ./
 
 # Cambiar a usuario no-root
 USER nestjs
