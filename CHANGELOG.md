@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/Gergab00/sp-amz-backend/compare/v1.0.0...v1.1.0) (2026-03-27)
+
+
+### Features
+
+* **api-docs:** agrega referencia scalar para openapi ([f1acb33](https://github.com/Gergab00/sp-amz-backend/commit/f1acb33ad224f598b3a7f4f25a4b7ba00dbb84c6))
+
 # 1.0.0 (2026-03-27)
 
 
