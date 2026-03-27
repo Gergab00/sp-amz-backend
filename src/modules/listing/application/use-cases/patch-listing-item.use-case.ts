@@ -13,39 +13,41 @@ import { plainToInstance } from 'class-transformer';
  */
 @Injectable()
 export class PatchListingItemUseCase {
-    constructor(private readonly spapiClient: SpapiClient) { }
+  constructor(private readonly spapiClient: SpapiClient) {}
 
-    /**
-     * Ejecuta la operación para actualizar un listing existente.
-     *
-     * @param dto DTO con los parámetros necesarios para la operación.
-     * @returns Respuesta de la SP-API.
-     */
-    async execute(dto: PatchListingItemDto): Promise<any> {
-        // Validar el DTO antes de continuar
-        const dtoInstance = plainToInstance(PatchListingItemDto, dto);
-        const errors = await validate(dtoInstance);
-        if (errors.length > 0) {
-            throw new Error(`Errores de validación: ${errors.map(e => Object.values(e.constraints || {}).join(', ')).join('; ')}`);
-        }
-
-        // ANCHOR: TRANSFORMACION_PRECIO
-        // Aquí se debe invocar el servicio de transformación de precio
-        // Ejemplo: const precioTransformado = await priceTransformerService.transform(dto.price, dto);
-        // Luego usar precioTransformado en el body
-
-        const body = PatchListingMapper.toSpapiBody(dto);
-
-        const response = await this.spapiClient.callAPI({
-            endpoint: 'listingsItems',
-            operation: 'patchListingsItem',
-            path: { sellerId: dto.sellerId, sku: dto.asin },
-            query: { marketplaceIds: [dto.marketplaceId] },
-            body,
-        });
-
-        console.log('Respuesta de SP-API patchListingsItem:', response);
-
-        return response;
+  /**
+   * Ejecuta la operación para actualizar un listing existente.
+   *
+   * @param dto DTO con los parámetros necesarios para la operación.
+   * @returns Respuesta de la SP-API.
+   */
+  async execute(dto: PatchListingItemDto): Promise<any> {
+    // Validar el DTO antes de continuar
+    const dtoInstance = plainToInstance(PatchListingItemDto, dto);
+    const errors = await validate(dtoInstance);
+    if (errors.length > 0) {
+      throw new Error(
+        `Errores de validación: ${errors.map((e) => Object.values(e.constraints || {}).join(', ')).join('; ')}`,
+      );
     }
+
+    // ANCHOR: TRANSFORMACION_PRECIO
+    // Aquí se debe invocar el servicio de transformación de precio
+    // Ejemplo: const precioTransformado = await priceTransformerService.transform(dto.price, dto);
+    // Luego usar precioTransformado en el body
+
+    const body = PatchListingMapper.toSpapiBody(dto);
+
+    const response = await this.spapiClient.callAPI({
+      endpoint: 'listingsItems',
+      operation: 'patchListingsItem',
+      path: { sellerId: dto.sellerId, sku: dto.asin },
+      query: { marketplaceIds: [dto.marketplaceId] },
+      body,
+    });
+
+    console.log('Respuesta de SP-API patchListingsItem:', response);
+
+    return response;
+  }
 }

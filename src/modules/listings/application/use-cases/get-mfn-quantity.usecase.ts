@@ -11,7 +11,7 @@ import { MfnQuantityResponseDto } from '../dto/mfn-quantity-response.dto';
 @Injectable()
 export class GetMfnQuantityUseCase {
   constructor(
-    @Inject('ListingsApiPort') private readonly listingsApi: ListingsApiPort
+    @Inject('ListingsApiPort') private readonly listingsApi: ListingsApiPort,
   ) {}
 
   async execute(dto: GetMfnQuantityDto): Promise<MfnQuantityResponseDto> {
@@ -23,10 +23,13 @@ export class GetMfnQuantityUseCase {
 
     console.log(`Respuesta SP-API recibida: ${JSON.stringify(spItem)}`);
 
-    const { quantity, fulfillmentChannel, amount, currency } = ListingsMapper.mapMfnQuantity(spItem, dto.marketplaceId);
+    const { quantity, fulfillmentChannel, amount, currency } =
+      ListingsMapper.mapMfnQuantity(spItem, dto.marketplaceId);
 
     if (quantity === null || amount === null) {
-      throw new NotFoundException('No hay fulfillment_availability u oferta para este SKU/marketplace (MFN).');
+      throw new NotFoundException(
+        'No hay fulfillment_availability u oferta para este SKU/marketplace (MFN).',
+      );
     }
 
     return {

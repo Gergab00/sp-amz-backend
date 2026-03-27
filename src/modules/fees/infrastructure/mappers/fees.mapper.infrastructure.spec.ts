@@ -21,21 +21,21 @@ describe('FeesMapper', () => {
               TimeOfFeesEstimation: '2025-11-08T10:00:00Z',
               TotalFeesEstimate: {
                 CurrencyCode: 'MXN',
-                Amount: 75.50,
+                Amount: 75.5,
               },
               FeeDetailList: [
                 {
                   FeeType: 'ReferralFee',
                   FeeAmount: {
                     CurrencyCode: 'MXN',
-                    Amount: 45.00,
+                    Amount: 45.0,
                   },
                 },
                 {
                   FeeType: 'VariableClosingFee',
                   FeeAmount: {
                     CurrencyCode: 'MXN',
-                    Amount: 30.50,
+                    Amount: 30.5,
                   },
                 },
               ],
@@ -48,13 +48,13 @@ describe('FeesMapper', () => {
 
       expect(result).not.toBeNull();
       expect(result?.currency).toBe('MXN');
-      expect(result?.totalFeesEstimate).toBe(75.50);
+      expect(result?.totalFeesEstimate).toBe(75.5);
       expect(result?.feeBreakdown).toHaveLength(2);
       expect(result?.feeBreakdown[0].feeType).toBe('ReferralFee');
-      expect(result?.feeBreakdown[0].feeAmount).toBe(45.00);
+      expect(result?.feeBreakdown[0].feeAmount).toBe(45.0);
       expect(result?.feeBreakdown[0].currency).toBe('MXN');
       expect(result?.feeBreakdown[1].feeType).toBe('VariableClosingFee');
-      expect(result?.feeBreakdown[1].feeAmount).toBe(30.50);
+      expect(result?.feeBreakdown[1].feeAmount).toBe(30.5);
       expect(result?.raw).toBeDefined();
     });
 
@@ -166,13 +166,13 @@ describe('FeesMapper', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'USD',
-                Amount: 10.00,
+                Amount: 10.0,
               },
               FeeDetailList: [
                 {
                   // FeeType faltante
                   FeeAmount: {
-                    Amount: 10.00,
+                    Amount: 10.0,
                     // CurrencyCode faltante
                   },
                 },
@@ -233,19 +233,19 @@ describe('FeesMapper', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'MXN',
-                Amount: 50.00,
+                Amount: 50.0,
               },
               FeeDetailList: [
                 {
                   FeeType: 'ReferralFee',
                   FeeAmount: {
                     CurrencyCode: 'MXN',
-                    Amount: 50.00,
+                    Amount: 50.0,
                   },
                   IncludedFeeDetailList: [
                     {
                       FeeType: 'SubFee',
-                      FeeAmount: { CurrencyCode: 'MXN', Amount: 25.00 },
+                      FeeAmount: { CurrencyCode: 'MXN', Amount: 25.0 },
                     },
                   ],
                 },
@@ -270,7 +270,7 @@ describe('FeesMapper', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'CAD',
-                Amount: 15.00,
+                Amount: 15.0,
               },
               FeeDetailList: [],
             },
@@ -428,47 +428,47 @@ describe('FeesMapper', () => {
 /** =============================================================
  * ARQUITECTURA LIMPIA:
  * Estos tests cumplen con Clean Architecture al:
- * 
+ *
  * 1. VALIDACIÓN DE ANTI-CORRUPTION LAYER:
  *    - Verifican que el mapper transforma correctamente datos externos
  *    - Aseguran robustez ante datos inesperados o malformados
  *    - Validan que el dominio está protegido de cambios en SP-API
- * 
+ *
  * 2. COBERTURA COMPLETA:
  *    - Happy path: Respuesta completa y válida
  *    - Edge cases: Status !== Success, campos null/undefined, arrays vacíos
  *    - Conversiones de tipos: String → Number
  *    - Campos opcionales: includedFeeDetail, raw
  *    - Error handling: extractErrorMessage con varios escenarios
- * 
+ *
  * 3. TESTS AISLADOS:
  *    - Cada test valida un escenario específico
  *    - No hay dependencias entre tests
  *    - Datos de prueba inline para claridad
  *    - Nomenclatura descriptiva (debe...)
- * 
+ *
  * 4. MANTENIBILIDAD:
  *    - ANCHOR comments para navegación
  *    - Estructura de datos clara y realista
  *    - Assertions específicas y verificables
- * 
+ *
  * CÓMO EXTENDER:
  * - Nuevos campos en DTO: Agrega assertions para validar extracción
  * - Nuevas reglas de mapeo: Crea tests específicos para cada regla
  * - Casos edge adicionales: Agrega describe() con nuevos escenarios
  * - Performance tests: Agrega tests para validar tiempo de ejecución
- * 
+ *
  * CÓMO MODIFICAR:
  * - Si cambia estructura SP-API: Actualiza datos de prueba
  * - Si cambian validaciones: Ajusta assertions y expected values
  * - Para mejorar legibilidad: Extrae fixtures a constantes
  * - Para tests parametrizados: Usa test.each() de Jest
- * 
+ *
  * COBERTURA:
  * - mapAsinEstimate: 13 tests (happy path + 12 edge cases)
  * - extractErrorMessage: 4 tests
  * - Total: 17 tests cubriendo > 95% del código
- * 
+ *
  * NOTAS:
  * - Los datos de prueba reflejan respuestas reales de SP-API
  * - Cada ANCHOR marca un escenario específico de prueba

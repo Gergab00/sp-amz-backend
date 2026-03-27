@@ -39,7 +39,7 @@ export class SearchCatalogItemsUseCase {
     return {
       items: response.items?.map(CatalogItemMapper.toDomain) || [],
       pagination: response.pagination,
-      numberOfResults: response.numberOfResults
+      numberOfResults: response.numberOfResults,
     };
   }
 }

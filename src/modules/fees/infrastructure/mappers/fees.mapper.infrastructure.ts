@@ -1,4 +1,7 @@
-import { FeesEstimateResponseDto, FeeDetail } from '../../application/dto/fees-estimate-response.dto';
+import {
+  FeesEstimateResponseDto,
+  FeeDetail,
+} from '../../application/dto/fees-estimate-response.dto';
 import type { Currency } from '../../../../shared/infrastructure/http/spapi/spapi.config';
 
 /** =============================================================
@@ -9,7 +12,7 @@ import type { Currency } from '../../../../shared/infrastructure/http/spapi/spap
 export class FeesMapper {
   /**
    * Transforma la respuesta raw de getMyFeesEstimateForASIN a DTO interno.
-   * 
+   *
    * Estructura esperada de SP-API (puede venir con o sin wrapper payload):
    * Opción 1 (con payload):
    * {
@@ -17,7 +20,7 @@ export class FeesMapper {
    *     FeesEstimateResult: { ... }
    *   }
    * }
-   * 
+   *
    * Opción 2 (sin payload - amazon-sp-api devuelve directamente):
    * {
    *   FeesEstimateResult: {
@@ -40,7 +43,7 @@ export class FeesMapper {
    *     Error?: { ... }
    *   }
    * }
-   * 
+   *
    * @param spapiResponse - Respuesta raw de SP-API
    * @returns DTO normalizado con fees estimate o null si no hay datos
    */
@@ -48,8 +51,10 @@ export class FeesMapper {
     // ANCHOR: validate-response-structure
     // Validar que la respuesta tenga la estructura mínima esperada
     // Manejar ambos casos: con y sin wrapper payload
-    const result = spapiResponse?.payload?.FeesEstimateResult || spapiResponse?.FeesEstimateResult;
-    
+    const result =
+      spapiResponse?.payload?.FeesEstimateResult ||
+      spapiResponse?.FeesEstimateResult;
+
     if (!result) {
       return null;
     }
@@ -106,14 +111,16 @@ export class FeesMapper {
   /**
    * Extrae el mensaje de error de una respuesta fallida de SP-API.
    * Útil para logging y debugging cuando Status !== 'Success'.
-   * 
+   *
    * @param spapiResponse - Respuesta raw de SP-API
    * @returns Mensaje de error o null
    */
   static extractErrorMessage(spapiResponse: any): string | null {
     // Manejar ambos casos: con y sin wrapper payload
-    const result = spapiResponse?.payload?.FeesEstimateResult || spapiResponse?.FeesEstimateResult;
-    
+    const result =
+      spapiResponse?.payload?.FeesEstimateResult ||
+      spapiResponse?.FeesEstimateResult;
+
     if (!result || result.Status === 'Success') {
       return null;
     }
@@ -131,43 +138,43 @@ export class FeesMapper {
 /** =============================================================
  * ARQUITECTURA LIMPIA:
  * Este mapper cumple con Clean Architecture al:
- * 
+ *
  * 1. ANTI-CORRUPTION LAYER:
  *    - Desacopla el dominio de la estructura externa de SP-API
  *    - Transforma datos externos a modelos internos (DTOs)
  *    - Protege el dominio de cambios en la API externa
  *    - Normaliza nombres y estructura de datos
- * 
+ *
  * 2. SINGLE RESPONSIBILITY:
  *    - Solo se encarga de transformar datos (mapeo)
  *    - No maneja errores HTTP (responsabilidad del gateway)
  *    - No valida parámetros de entrada (responsabilidad del DTO)
  *    - No contiene lógica de negocio (responsabilidad del use case)
- * 
+ *
  * 3. ROBUSTEZ:
  *    - Maneja respuestas null/undefined con validaciones
  *    - Usa Array.isArray para evitar errores con datos inesperados
  *    - Convierte tipos (Number) para asegurar consistencia
  *    - Retorna null cuando no hay datos válidos
- * 
+ *
  * 4. TRAZABILIDAD:
  *    - Incluye campo 'raw' para debugging y auditoría
  *    - ANCHOR comments para navegación de código
  *    - JSDoc detallado con estructura esperada
- * 
+ *
  * CÓMO EXTENDER:
  * - Nuevos campos: Agrega propiedades al DTO y extrae del response
  * - Validaciones adicionales: Añade checks en las secciones ANCHOR
  * - Transformaciones complejas: Crea métodos auxiliares privados
  * - Otros endpoints: Agrega métodos static para otros mapeos (ej. mapSkuEstimate)
  * - Cálculos derivados: Agrega lógica para campos calculados (ej. netProfit)
- * 
+ *
  * CÓMO MODIFICAR:
  * - Si SP-API cambia estructura: Actualiza las validaciones y extracciones
  * - Para mejorar performance: Considera lazy loading del campo 'raw'
  * - Si necesitas logs: Inyecta Logger (pero prefiere mantener mappers puros)
  * - Para casos especiales: Agrega parámetros opcionales al método
- * 
+ *
  * TESTING:
  * - Happy path: Respuesta completa y válida de SP-API
  * - Status !== 'Success': Retorna null
@@ -175,7 +182,7 @@ export class FeesMapper {
  * - Campos null/undefined: Maneja gracefully
  * - Tipos incorrectos: Convierte a Number correctamente
  * - extractErrorMessage: Valida extracción de mensajes de error
- * 
+ *
  * NOTAS IMPORTANTES:
  * - Mapper es PURO: misma entrada → misma salida (sin side effects)
  * - NO lanza excepciones, retorna null si datos inválidos

@@ -9,7 +9,12 @@ import { GetItemOffersDto } from '../dto/get-item-offers.dto';
  * Condición de ítem permitida por la SP-API de precios.
  * @typedef {('New'|'Used'|'Collectible'|'Refurbished'|'Club')} ItemCondition
  */
-export type ItemCondition = 'New' | 'Used' | 'Collectible' | 'Refurbished' | 'Club';
+export type ItemCondition =
+  | 'New'
+  | 'Used'
+  | 'Collectible'
+  | 'Refurbished'
+  | 'Club';
 
 // ANCHOR: servicio-pricing
 /**
@@ -22,7 +27,7 @@ export type ItemCondition = 'New' | 'Used' | 'Collectible' | 'Refurbished' | 'Cl
 export class PricingService {
   constructor(
     private readonly sp: SpapiClient,
-    private readonly getItemOffersUseCase: GetItemOffersUseCase
+    private readonly getItemOffersUseCase: GetItemOffersUseCase,
   ) {}
 
   // SECTION: Método principal - getItemOffers

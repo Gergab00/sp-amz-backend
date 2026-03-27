@@ -7,12 +7,19 @@ export class GetItemOffersDto {
   @IsString()
   asin: string;
 
-  @ApiProperty({ description: 'Lista de IDs de marketplace', example: ['ATVPDKIKX0DER'] })
+  @ApiProperty({
+    description: 'Lista de IDs de marketplace',
+    example: ['ATVPDKIKX0DER'],
+  })
   @IsArray()
   @IsString({ each: true })
   marketplaceId: string[];
 
-  @ApiProperty({ description: 'Condición del ítem', example: 'New', required: false })
+  @ApiProperty({
+    description: 'Condición del ítem',
+    example: 'New',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   itemCondition?: ItemCondition;

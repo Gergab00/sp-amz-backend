@@ -8,7 +8,19 @@ export class CatalogItemParamsAdapter {
       path: { asin },
       query: {
         marketplaceIds: dto.marketplaceIds || ['A1AM78C64UM0Y8'],
-        includedData: dto.includedData?.length ? dto.includedData : ['attributes', 'classifications', 'dimensions', 'identifiers', 'images', 'productTypes', 'salesRanks', 'summaries', 'relationships'],
+        includedData: dto.includedData?.length
+          ? dto.includedData
+          : [
+              'attributes',
+              'classifications',
+              'dimensions',
+              'identifiers',
+              'images',
+              'productTypes',
+              'salesRanks',
+              'summaries',
+              'relationships',
+            ],
         locale: dto.locale,
       },
       options: { version: '2022-04-01' },

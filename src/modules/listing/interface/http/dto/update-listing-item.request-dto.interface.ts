@@ -18,12 +18,16 @@ export class UpdateListingItemDto {
   asin: string;
 
   @ApiProperty({ description: 'ID del marketplace', example: 'A1AM78C64UM0Y8' })
-  @IsString({ message: 'El parámetro "marketplaceId" debe ser un string válido.' })
+  @IsString({
+    message: 'El parámetro "marketplaceId" debe ser un string válido.',
+  })
   @IsNotEmpty({ message: 'El parámetro "marketplaceId" es obligatorio.' })
   marketplaceId: string;
 
   @ApiProperty({ description: 'Tipo de producto', example: 'TOY_FIGURE' })
-  @IsString({ message: 'El parámetro "productType" debe ser un string válido.' })
+  @IsString({
+    message: 'El parámetro "productType" debe ser un string válido.',
+  })
   @IsNotEmpty({ message: 'El parámetro "productType" es obligatorio.' })
   productType: string;
 
@@ -33,7 +37,10 @@ export class UpdateListingItemDto {
   price: number;
 
   @ApiProperty({ description: 'Cantidad disponible', example: 1 })
-  @IsNumber({}, { message: 'El parámetro "quantity" debe ser un número válido.' })
+  @IsNumber(
+    {},
+    { message: 'El parámetro "quantity" debe ser un número válido.' },
+  )
   @IsNotEmpty({ message: 'El parámetro "quantity" es obligatorio.' })
   quantity: number;
 }
