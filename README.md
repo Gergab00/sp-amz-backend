@@ -30,12 +30,20 @@ Implicacion:
 ## Requisitos
 
 - Node.js 20 o superior (recomendado)
-- npm (el repo tambien incluye pnpm-lock.yaml para pipelines/release)
+- npm para desarrollo local
+- pnpm (via Corepack) para flujos que dependen de pnpm-lock.yaml, como build de Docker/Railway
 
 ## Instalacion
 
 ```bash
 npm install
+```
+
+Alternativa con pnpm:
+
+```bash
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
 ## Configuracion De Entorno
