@@ -1,22 +1,19 @@
 import { Injectable } from '@nestjs/common';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const SellingPartner = require('amazon-sp-api');
+import SellingPartner from 'amazon-sp-api';
 import { spapiConfig } from './spapi.config';
-
 
 type CallApiArgs = {
   endpoint: string;
   operation: string;
-  path?: any;
-  query?: any;
-  body?: any;
-  options?: any;
+  path?: Record<string, unknown>;
+  query?: Record<string, unknown>;
+  body?: Record<string, unknown>;
+  options?: Record<string, unknown>;
 };
-
 
 @Injectable()
 export class SpapiClient {
-  private readonly sp: any;
+  private readonly sp: SellingPartner;
 
   constructor() {
     const cfg = spapiConfig();
@@ -30,7 +27,7 @@ export class SpapiClient {
 
   async callAPI<T = any>(args: CallApiArgs): Promise<T> {
     try {
-      return this.sp.callAPI(args);
+      return await this.sp.callAPI(args);
     } catch (error) {
       // Manejo de errores
       throw new Error(`Error en la llamada a la API de SP-API: ${error}`);
