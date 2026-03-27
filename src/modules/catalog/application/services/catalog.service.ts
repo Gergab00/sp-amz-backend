@@ -7,7 +7,6 @@ import { GetCatalogItemUseCase } from '../use-cases/get-catalog-item.use-case';
 import { SearchCatalogItemsUseCase } from '../use-cases/search-catalog-items.use-case';
 import { SearchCatalogItemsDto } from '../dto/search-catalog-items.dto';
 
-
 @Injectable()
 /**
  * CLASS: Servicio de catálogo
@@ -32,7 +31,7 @@ export class CatalogService {
   constructor(
     private readonly sp: SpapiClient,
     private readonly getCatalogItemUseCase: GetCatalogItemUseCase,
-    private readonly searchCatalogItemsUseCase: SearchCatalogItemsUseCase
+    private readonly searchCatalogItemsUseCase: SearchCatalogItemsUseCase,
   ) {}
 
   // SECTION: operaciones-catalogo

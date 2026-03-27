@@ -1,6 +1,6 @@
 export class ItemOffersMapper {
   static toDomain(response: any): any {
-      return {
+    return {
       asin: response.asin,
       offers: response.Offers.map((offer: any) => ({
         price: offer.ListingPrice?.Amount || 0,
@@ -11,7 +11,7 @@ export class ItemOffersMapper {
         sellerId: offer.SellerId || 'Unknown',
         isFeaturedMerchant: offer.IsFeaturedMerchant || false,
         isBuyBoxWinner: offer.IsBuyBoxWinner || false,
-        isFulfilledByAmazon: offer.IsFulfilledByAmazon || false
+        isFulfilledByAmazon: offer.IsFulfilledByAmazon || false,
       })),
     };
   }

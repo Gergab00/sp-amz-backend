@@ -18,17 +18,25 @@ export class PatchListingItemDto {
   asin: string;
 
   @ApiProperty({ description: 'ID del marketplace', example: 'A1AM78C64UM0Y8' })
-  @IsString({ message: 'El parámetro "marketplaceId" debe ser un string válido.' })
+  @IsString({
+    message: 'El parámetro "marketplaceId" debe ser un string válido.',
+  })
   @IsNotEmpty({ message: 'El parámetro "marketplaceId" es obligatorio.' })
   marketplaceId: string;
 
-  @ApiProperty({ description: 'Precio del producto (opcional)', example: 1049.99 })
+  @ApiProperty({
+    description: 'Precio del producto (opcional)',
+    example: 1049.99,
+  })
   @IsNumber({}, { message: 'El parámetro "price" debe ser un número válido.' })
   @IsOptional()
   price?: number;
 
   @ApiProperty({ description: 'Cantidad disponible (opcional)', example: 1 })
-  @IsNumber({}, { message: 'El parámetro "quantity" debe ser un número válido.' })
+  @IsNumber(
+    {},
+    { message: 'El parámetro "quantity" debe ser un número válido.' },
+  )
   @IsOptional()
   quantity?: number;
 }

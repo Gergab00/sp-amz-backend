@@ -14,7 +14,10 @@ export class SearchCatalogItemsDto {
    * Lista de IDs de marketplace donde se realizará la búsqueda.
    * @example ['A1AM78C64UM0Y8']
    */
-  @ApiProperty({ description: 'Lista de IDs de marketplace', example: ['A1AM78C64UM0Y8'] })
+  @ApiProperty({
+    description: 'Lista de IDs de marketplace',
+    example: ['A1AM78C64UM0Y8'],
+  })
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @IsArray()
   @IsString({ each: true })
@@ -24,9 +27,15 @@ export class SearchCatalogItemsDto {
    * Lista de identificadores de producto (ASIN, SKU, etc.).
    * @example ['B08XXXX', '750XXXX']
    */
-  @ApiProperty({ description: 'Lista de identificadores', example: ['B08XXXX', '750XXXX'], required: false })
+  @ApiProperty({
+    description: 'Lista de identificadores',
+    example: ['B08XXXX', '750XXXX'],
+    required: false,
+  })
   @IsOptional()
-  @Transform(({ value }) => (value ? (Array.isArray(value) ? value : [value]) : undefined))
+  @Transform(({ value }) =>
+    value ? (Array.isArray(value) ? value : [value]) : undefined,
+  )
   @IsArray()
   @IsString({ each: true })
   identifiers?: string[];
@@ -35,7 +44,11 @@ export class SearchCatalogItemsDto {
    * Tipo de identificador (ASIN, SKU, UPC, EAN, etc.).
    * @example 'ASIN'
    */
-  @ApiProperty({ description: 'Tipo de identificador', example: 'ASIN', required: false })
+  @ApiProperty({
+    description: 'Tipo de identificador',
+    example: 'ASIN',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   identifiersType?: string;
@@ -43,7 +56,10 @@ export class SearchCatalogItemsDto {
   /**
    * ID del vendedor (requerido si identifiersType = SKU).
    */
-  @ApiProperty({ description: 'ID del vendedor (requerido si identifiersType = SKU)', required: false })
+  @ApiProperty({
+    description: 'ID del vendedor (requerido si identifiersType = SKU)',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   sellerId?: string;
@@ -52,9 +68,15 @@ export class SearchCatalogItemsDto {
    * Palabras clave para búsqueda textual.
    * @example ['barbie', 'headbanz']
    */
-  @ApiProperty({ description: 'Palabras clave para búsqueda', example: ['barbie', 'headbanz'], required: false })
+  @ApiProperty({
+    description: 'Palabras clave para búsqueda',
+    example: ['barbie', 'headbanz'],
+    required: false,
+  })
   @IsOptional()
-  @Transform(({ value }) => (value ? (Array.isArray(value) ? value : [value]) : undefined))
+  @Transform(({ value }) =>
+    value ? (Array.isArray(value) ? value : [value]) : undefined,
+  )
   @IsArray()
   @IsString({ each: true })
   keywords?: string[];
@@ -63,9 +85,15 @@ export class SearchCatalogItemsDto {
    * Lista de marcas a filtrar en la búsqueda.
    * @example ['mattel', 'spin master']
    */
-  @ApiProperty({ description: 'Lista de marcas', example: ['mattel', 'spin master'], required: false })
+  @ApiProperty({
+    description: 'Lista de marcas',
+    example: ['mattel', 'spin master'],
+    required: false,
+  })
   @IsOptional()
-  @Transform(({ value }) => (value ? (Array.isArray(value) ? value : [value]) : undefined))
+  @Transform(({ value }) =>
+    value ? (Array.isArray(value) ? value : [value]) : undefined,
+  )
   @IsArray()
   @IsString({ each: true })
   brandNames?: string[];
@@ -74,9 +102,15 @@ export class SearchCatalogItemsDto {
    * Lista de categorías o clasificaciones a filtrar.
    * @example ['12345', '67890']
    */
-  @ApiProperty({ description: 'Lista de categorías', example: ['12345', '67890'], required: false })
+  @ApiProperty({
+    description: 'Lista de categorías',
+    example: ['12345', '67890'],
+    required: false,
+  })
   @IsOptional()
-  @Transform(({ value }) => (value ? (Array.isArray(value) ? value : [value]) : undefined))
+  @Transform(({ value }) =>
+    value ? (Array.isArray(value) ? value : [value]) : undefined,
+  )
   @IsArray()
   @IsString({ each: true })
   classificationIds?: string[];
@@ -85,7 +119,11 @@ export class SearchCatalogItemsDto {
    * Idioma de las palabras clave (por ejemplo, es_MX, en_US).
    * @example 'es_MX'
    */
-  @ApiProperty({ description: 'Idioma de las palabras clave', example: 'es_MX', required: false })
+  @ApiProperty({
+    description: 'Idioma de las palabras clave',
+    example: 'es_MX',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   keywordsLocale?: string;
@@ -96,8 +134,19 @@ export class SearchCatalogItemsDto {
    * @example ['attributes', 'classifications', 'dimensions', 'identifiers', 'summaries', 'images', 'productTypes', 'relationships', 'salesRanks']
    */
   @ApiProperty({
-    description: 'Conjuntos de datos a incluir en la respuesta. Por defecto: summaries',
-    example: ['attributes', 'classifications', 'dimensions', 'identifiers', 'summaries', 'images', 'productTypes', 'relationships', 'salesRanks'],
+    description:
+      'Conjuntos de datos a incluir en la respuesta. Por defecto: summaries',
+    example: [
+      'attributes',
+      'classifications',
+      'dimensions',
+      'identifiers',
+      'summaries',
+      'images',
+      'productTypes',
+      'relationships',
+      'salesRanks',
+    ],
     required: false,
     enum: [
       'attributes',
@@ -113,7 +162,9 @@ export class SearchCatalogItemsDto {
     ],
   })
   @IsOptional()
-  @Transform(({ value }) => (value ? (Array.isArray(value) ? value : [value]) : undefined))
+  @Transform(({ value }) =>
+    value ? (Array.isArray(value) ? value : [value]) : undefined,
+  )
   @IsArray()
   @IsString({ each: true })
   includedData?: string[];
@@ -122,7 +173,11 @@ export class SearchCatalogItemsDto {
    * Localización para los summaries devueltos por el endpoint.
    * @example 'es_MX'
    */
-  @ApiProperty({ description: 'Localización para los summaries', example: 'es_MX', required: false })
+  @ApiProperty({
+    description: 'Localización para los summaries',
+    example: 'es_MX',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   locale?: string;
@@ -131,7 +186,11 @@ export class SearchCatalogItemsDto {
    * Cantidad de resultados por página (paginación).
    * @example 10
    */
-  @ApiProperty({ description: 'Cantidad de resultados por página', example: 10, required: false })
+  @ApiProperty({
+    description: 'Cantidad de resultados por página',
+    example: 10,
+    required: false,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
@@ -141,7 +200,11 @@ export class SearchCatalogItemsDto {
    * Token para paginación de resultados.
    * @example 'abc123'
    */
-  @ApiProperty({ description: 'Token para paginación', example: 'abc123', required: false })
+  @ApiProperty({
+    description: 'Token para paginación',
+    example: 'abc123',
+    required: false,
+  })
   @IsOptional()
   @IsString()
   pageToken?: string;

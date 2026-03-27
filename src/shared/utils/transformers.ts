@@ -6,12 +6,23 @@
  * - Si value es string simple, devuelve array con un elemento.
  * - Si value es null/undefined/empty string, devuelve undefined.
  */
-export function toStringArray(value: unknown, separator = ','): string[] | undefined {
+export function toStringArray(
+  value: unknown,
+  separator = ',',
+): string[] | undefined {
   if (value === undefined || value === null) return undefined;
-  if (Array.isArray(value)) return value.map(String).map((s) => s.trim()).filter(Boolean);
+  if (Array.isArray(value))
+    return value
+      .map(String)
+      .map((s) => s.trim())
+      .filter(Boolean);
   const v = String(value).trim();
   if (!v) return undefined;
-  if (v.includes(separator)) return v.split(separator).map((s) => s.trim()).filter(Boolean);
+  if (v.includes(separator))
+    return v
+      .split(separator)
+      .map((s) => s.trim())
+      .filter(Boolean);
   return [v];
 }
 // NOTE: Se aplicó formato con style=prettier (origen: configuración del proyecto)

@@ -54,7 +54,8 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
           // Shipping es opcional, solo incluirlo si se proporciona
           ...(params.shippingAmount !== undefined && {
             Shipping: {
-              CurrencyCode: params.shippingCurrency || params.listingPriceCurrency,
+              CurrencyCode:
+                params.shippingCurrency || params.listingPriceCurrency,
               Amount: params.shippingAmount,
             },
           }),
@@ -77,7 +78,9 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
       this.logger.debug(
         `Respuesta exitosa de getMyFeesEstimateForASIN para ASIN: ${params.asin}`,
       );
-      this.logger.debug(`Respuesta de SP-API en getMyFeesEstimateForASIN: ${JSON.stringify(response)}`);
+      this.logger.debug(
+        `Respuesta de SP-API en getMyFeesEstimateForASIN: ${JSON.stringify(response)}`,
+      );
 
       return response;
     } catch (error: any) {
@@ -94,7 +97,8 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
         throw new HttpException(
           {
             statusCode: HttpStatus.FORBIDDEN,
-            message: 'Acceso denegado a Product Fees API. Verifica los permisos de tu aplicación en Seller Central.',
+            message:
+              'Acceso denegado a Product Fees API. Verifica los permisos de tu aplicación en Seller Central.',
             error: 'Forbidden',
             details: error?.message,
           },
@@ -107,7 +111,8 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
         throw new HttpException(
           {
             statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-            message: 'Parámetros inválidos o ASIN no encontrado en el marketplace especificado.',
+            message:
+              'Parámetros inválidos o ASIN no encontrado en el marketplace especificado.',
             error: 'Unprocessable Entity',
             details: error?.message,
           },
@@ -120,7 +125,8 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
         throw new HttpException(
           {
             statusCode: HttpStatus.TOO_MANY_REQUESTS,
-            message: 'Límite de solicitudes excedido. Intenta nuevamente en unos momentos.',
+            message:
+              'Límite de solicitudes excedido. Intenta nuevamente en unos momentos.',
             error: 'Too Many Requests',
             details: error?.message,
             retryAfter: error?.response?.headers?.['retry-after'] || 60,
@@ -159,34 +165,34 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
 /** =============================================================
  * ARQUITECTURA LIMPIA:
  * Este gateway cumple con Clean Architecture al:
- * 
+ *
  * 1. IMPLEMENTAR EL PUERTO (ProductFeesPort):
  *    - Desacopla el dominio de la infraestructura
  *    - Permite cambiar el proveedor sin afectar la lógica de negocio
  *    - Facilita testing mediante mocks/stubs
- * 
+ *
  * 2. INYECCIÓN DE DEPENDENCIAS:
  *    - SpapiClient se inyecta vía constructor (NestJS DI)
  *    - Permite reemplazar la implementación en tests
  *    - Sigue el principio de Inversión de Dependencias (SOLID)
- * 
+ *
  * 3. MANEJO ROBUSTO DE ERRORES:
  *    - Captura errores específicos (403, 422, 429, 404)
  *    - Transforma errores externos a excepciones HTTP estándar
  *    - Proporciona mensajes claros y contexto para debugging
  *    - Incluye detalles como retryAfter para throttling
- * 
+ *
  * 4. OBSERVABILIDAD:
  *    - Logger de NestJS para tracking de requests/responses
  *    - Logs en nivel DEBUG para operaciones normales
  *    - Logs en nivel ERROR con stack trace para fallos
  *    - No expone datos sensibles en logs
- * 
+ *
  * 5. CONSTRUCCIÓN DE REQUEST:
  *    - Transforma parámetros del dominio al formato SP-API
  *    - Maneja campos opcionales (shipping) correctamente
  *    - Aplica defaults apropiados (isAmazonFulfilled = false)
- * 
+ *
  * CÓMO EXTENDER:
  * - Agregar nuevos métodos: Implementa otras operaciones del puerto ProductFeesPort
  * - Retry automático: Usa decorador @Retry o librería como axios-retry para 429
@@ -194,20 +200,20 @@ export class SpapiProductFeesGateway implements ProductFeesPort {
  * - Circuit breaker: Integra patrón circuit breaker para resilencia
  * - Métricas: Agrega contador de llamadas exitosas/fallidas para monitoring
  * - Validación adicional: Valida parámetros antes de llamar a SP-API
- * 
+ *
  * CÓMO MODIFICAR:
  * - Si SP-API cambia estructura de request: Actualiza construcción en build-request-body
  * - Para nuevos códigos de error: Agrega casos en error-handling
  * - Si cambia el endpoint: Actualiza el valor en sp-api-call
  * - Para logs más detallados: Ajusta nivel de logging o agrega más contexto
  * - Si necesitas transformación de respuesta: Hazlo en el Mapper, no aquí
- * 
+ *
  * TESTING:
  * - Mockea SpapiClient para tests unitarios
  * - Verifica manejo de cada código de error (403, 422, 429, 404)
  * - Valida construcción correcta del request body
  * - Confirma que los logs se emiten apropiadamente
- * 
+ *
  * NOTAS IMPORTANTES:
  * - Este gateway NO transforma la respuesta, esa responsabilidad es del Mapper
  * - Los errores se propagan como HttpException para que NestJS los maneje

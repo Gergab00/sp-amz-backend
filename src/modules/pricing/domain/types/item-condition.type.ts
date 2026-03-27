@@ -1,1 +1,6 @@
-export type ItemCondition = 'New' | 'Used' | 'Collectible' | 'Refurbished' | 'Club';
+export type ItemCondition =
+  | 'New'
+  | 'Used'
+  | 'Collectible'
+  | 'Refurbished'
+  | 'Club';

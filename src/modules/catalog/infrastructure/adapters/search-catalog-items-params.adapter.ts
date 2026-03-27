@@ -46,8 +46,10 @@ export class SearchCatalogItemsParamsAdapter {
     }
     if (keywords && keywords.length > 0) {
       query.keywords = keywords.join(',');
-      if (brandNames && brandNames.length > 0) query.brandNames = brandNames.join(',');
-      if (classificationIds && classificationIds.length > 0) query.classificationIds = classificationIds.join(',');
+      if (brandNames && brandNames.length > 0)
+        query.brandNames = brandNames.join(',');
+      if (classificationIds && classificationIds.length > 0)
+        query.classificationIds = classificationIds.join(',');
       if (keywordsLocale) query.keywordsLocale = keywordsLocale;
     }
     return {

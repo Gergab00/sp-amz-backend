@@ -6,7 +6,10 @@ import { PatchListingItemDto } from '../../interface/http/dto/patch-listing-item
  * Mapper para transformar un DTO en el cuerpo esperado por la SP-API para la operación patchListingsItem.
  */
 export class PatchListingMapper {
-  static toSpapiBody(dto: PatchListingItemDto): { productType: string; patches: Array<{ op: string; path: string; value: any }> } {
+  static toSpapiBody(dto: PatchListingItemDto): {
+    productType: string;
+    patches: Array<{ op: string; path: string; value: any }>;
+  } {
     const patches: Array<{ op: string; path: string; value: any }> = [];
 
     if (dto.price !== undefined) {
@@ -27,13 +30,13 @@ export class PatchListingMapper {
         path: '/attributes/fulfillment_availability',
         value: [
           {
-            fulfillment_channel_code: "DEFAULT",
+            fulfillment_channel_code: 'DEFAULT',
             quantity: dto.quantity,
           },
         ],
       });
     }
 
-    return { productType: "TOY_FIGURE", patches: patches };
+    return { productType: 'TOY_FIGURE', patches: patches };
   }
 }

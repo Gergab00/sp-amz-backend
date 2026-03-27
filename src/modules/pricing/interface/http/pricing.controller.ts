@@ -18,14 +18,43 @@ export class PricingController {
    * @returns Ofertas y precios para el ASIN en el marketplace indicado.
    */
   @Get('items/:asin/offers')
-  @ApiParam({ name: 'asin', type: String, required: true, example: 'B07N4M94TL', description: 'ASIN del producto' })
-  @ApiOkResponse({ description: 'Ofertas (Buy Box, FBA/MFN, precios, Prime) para un ASIN', schema: { example: { asin: 'B07N4M94TL', offers: [{ price: 19.99, condition: 'New', isPrime: true }] } } })
-  @ApiQuery({ name: 'marketplaceId', required: true, type: [String], isArray: true, example: ['A1AM78C64UM0Y8', 'ATVPDKIKX0DER'], description: 'IDs de marketplace (puede ser múltiple, ej: MX, US)' })
-  @ApiQuery({ name: 'itemCondition', required: false, type: String, enum: ['New', 'Used', 'Collectible', 'Refurbished', 'Club'], example: 'New', description: 'Condición del ítem' })
+  @ApiParam({
+    name: 'asin',
+    type: String,
+    required: true,
+    example: 'B07N4M94TL',
+    description: 'ASIN del producto',
+  })
+  @ApiOkResponse({
+    description: 'Ofertas (Buy Box, FBA/MFN, precios, Prime) para un ASIN',
+    schema: {
+      example: {
+        asin: 'B07N4M94TL',
+        offers: [{ price: 19.99, condition: 'New', isPrime: true }],
+      },
+    },
+  })
+  @ApiQuery({
+    name: 'marketplaceId',
+    required: true,
+    type: [String],
+    isArray: true,
+    example: ['A1AM78C64UM0Y8', 'ATVPDKIKX0DER'],
+    description: 'IDs de marketplace (puede ser múltiple, ej: MX, US)',
+  })
+  @ApiQuery({
+    name: 'itemCondition',
+    required: false,
+    type: String,
+    enum: ['New', 'Used', 'Collectible', 'Refurbished', 'Club'],
+    example: 'New',
+    description: 'Condición del ítem',
+  })
   getItemOffers(
     @Param('asin') asin: string,
     @Query('marketplaceId') marketplaceId: string[],
-    @Query('itemCondition') itemCondition?: 'New' | 'Used' | 'Collectible' | 'Refurbished' | 'Club',
+    @Query('itemCondition')
+    itemCondition?: 'New' | 'Used' | 'Collectible' | 'Refurbished' | 'Club',
   ) {
     // INFO: marketplaceId ahora es array, se pasa directamente al servicio.
     return this.service.getItemOffers({ asin, marketplaceId, itemCondition });

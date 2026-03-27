@@ -14,7 +14,10 @@ export class ListingsController {
   constructor(private readonly service: ListingsService) {}
 
   @Get('mfn-quantity')
-  @ApiOkResponse({ description: 'Cantidad MFN para el SKU/marketplace especificado', type: MfnQuantityResponseDto })
+  @ApiOkResponse({
+    description: 'Cantidad MFN para el SKU/marketplace especificado',
+    type: MfnQuantityResponseDto,
+  })
   getMfnQuantity(@Query() dto: GetMfnQuantityDto) {
     return this.service.getMfnQuantity(dto);
   }

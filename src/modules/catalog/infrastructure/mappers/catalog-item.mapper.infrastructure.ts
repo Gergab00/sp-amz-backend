@@ -1,11 +1,20 @@
-import { CatalogItemDomain, SpapiCatalogItemResponse } from '../../domain/types/catalog-item.types';
+import {
+  CatalogItemDomain,
+  SpapiCatalogItemResponse,
+} from '../../domain/types/catalog-item.types';
 
 export class CatalogItemMapper {
   static toDomain(response: SpapiCatalogItemResponse): CatalogItemDomain {
     return {
       asin: response.asin,
-      title: response.attributes?.item_name?.[0]?.value || response.summaries?.[0]?.itemName || 'Sin título',
-      brand: response.attributes?.brand?.[0]?.value || response.summaries?.[0]?.brandName || 'Sin marca',
+      title:
+        response.attributes?.item_name?.[0]?.value ||
+        response.summaries?.[0]?.itemName ||
+        'Sin título',
+      brand:
+        response.attributes?.brand?.[0]?.value ||
+        response.summaries?.[0]?.brandName ||
+        'Sin marca',
       attributes: response.attributes || {},
       classifications: response.classifications || [],
       dimensions: response.dimensions || [],

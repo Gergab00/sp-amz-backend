@@ -9,13 +9,13 @@ import { HealthModule } from './health/health.module';
 import { SpapiModule } from './shared/infrastructure/http/spapi/spapi.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
-        HealthModule,
-        SpapiModule,
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    HealthModule,
+    SpapiModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
 // NOTE: Se aplicó formato con style=prettier (origen: configuración del proyecto)

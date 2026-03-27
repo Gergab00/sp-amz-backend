@@ -8,67 +8,67 @@ import type { Currency } from '../../../../shared/infrastructure/http/spapi/spap
 
 /** Detalle individual de un fee */
 export class FeeDetail {
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'ReferralFee',
-    description: 'Tipo de fee (ReferralFee, PerItemFee, FBAFees, etc.)'
+    description: 'Tipo de fee (ReferralFee, PerItemFee, FBAFees, etc.)',
   })
   feeType!: string;
 
-  @ApiProperty({ 
-    example: 45.00,
-    description: 'Monto del fee'
+  @ApiProperty({
+    example: 45.0,
+    description: 'Monto del fee',
   })
   feeAmount!: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'MXN',
-    description: 'Moneda del fee'
+    description: 'Moneda del fee',
   })
   currency!: Currency;
 
-  @ApiProperty({ 
+  @ApiProperty({
     example: false,
     nullable: true,
-    description: 'Indica si el fee está incluido en el total (opcional)'
+    description: 'Indica si el fee está incluido en el total (opcional)',
   })
   includedFeeDetail?: boolean;
 }
 
 /** Respuesta normalizada de estimación de fees para un ASIN */
 export class FeesEstimateResponseDto {
-  @ApiProperty({ 
+  @ApiProperty({
     example: 'MXN',
-    description: 'Moneda de la estimación'
+    description: 'Moneda de la estimación',
   })
   currency!: Currency;
 
-  @ApiProperty({ 
-    example: 75.50,
-    description: 'Total estimado de fees de Amazon'
+  @ApiProperty({
+    example: 75.5,
+    description: 'Total estimado de fees de Amazon',
   })
   totalFeesEstimate!: number;
 
-  @ApiProperty({ 
+  @ApiProperty({
     type: [FeeDetail],
     description: 'Desglose detallado de cada fee',
     example: [
-      { feeType: 'ReferralFee', feeAmount: 45.00, currency: 'MXN' },
-      { feeType: 'VariableClosingFee', feeAmount: 30.50, currency: 'MXN' }
-    ]
+      { feeType: 'ReferralFee', feeAmount: 45.0, currency: 'MXN' },
+      { feeType: 'VariableClosingFee', feeAmount: 30.5, currency: 'MXN' },
+    ],
   })
   feeBreakdown!: FeeDetail[];
 
-  @ApiProperty({ 
+  @ApiProperty({
     nullable: true,
     description: 'Respuesta raw de SP-API (opcional, para debugging)',
-    example: { 
-      FeesEstimateResult: { 
-        Status: 'Success', 
-        FeesEstimate: { 
-          TotalFeesEstimate: { CurrencyCode: 'MXN', Amount: 75.50 }
-        } 
-      } 
-    }
+    example: {
+      FeesEstimateResult: {
+        Status: 'Success',
+        FeesEstimate: {
+          TotalFeesEstimate: { CurrencyCode: 'MXN', Amount: 75.5 },
+        },
+      },
+    },
   })
   raw?: any;
 }
@@ -81,19 +81,19 @@ export class FeesEstimateResponseDto {
  * 3. Documentar con Swagger (@ApiProperty) para generar API docs automáticas
  * 4. Proporcionar ejemplos claros para facilitar el consumo del API
  * 5. Incluir campo "raw" opcional para debugging sin exponer detalles en producción
- * 
+ *
  * CÓMO EXTENDER:
  * - Agregar nuevos campos de fees: añade propiedades a FeeDetail o FeesEstimateResponseDto
  * - Nuevos metadatos: agrega propiedades con decoradores @ApiProperty apropiados
  * - Campos calculados: añade propiedades derivadas (ej. netProfit = listingPrice - totalFees)
  * - Información de contexto: agrega asin, marketplaceId, timestamp para auditoría
- * 
+ *
  * CÓMO MODIFICAR:
  * - Si SP-API cambia estructura de respuesta, actualiza el mapper (no este DTO)
  * - Si necesitas ocultar "raw" en producción, usa @Exclude() + class-transformer
  * - Para agregar validaciones de salida, usa decoradores de class-validator
  * - Para renombrar campos, actualiza nombres de propiedades y ejemplos Swagger
- * 
+ *
  * NOTA:
  * Este DTO es principalmente para documentación y tipado. La transformación
  * de datos SP-API a este formato se hace en el Mapper (Fase 4), aplicando

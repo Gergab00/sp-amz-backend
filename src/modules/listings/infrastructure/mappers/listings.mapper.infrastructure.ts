@@ -15,17 +15,28 @@ export class ListingsMapper {
     const offer = Array.isArray(spItem?.offers)
       ? spItem.offers.find((x: any) => x.marketplaceId === marketplaceId)
       : null;
-    const entry = fa.find((x: any) =>
-      (x?.fulfillmentChannelCode === 'DEFAULT' || x?.fulfillment_channel_code === 'DEFAULT')
-      && (x?.marketplaceId === marketplaceId || x?.marketplace_id === marketplaceId)
+    const entry = fa.find(
+      (x: any) =>
+        (x?.fulfillmentChannelCode === 'DEFAULT' ||
+          x?.fulfillment_channel_code === 'DEFAULT') &&
+        (x?.marketplaceId === marketplaceId ||
+          x?.marketplace_id === marketplaceId),
     );
 
     return {
       quantity: entry?.quantity ?? null,
-      fulfillmentChannel: entry?.fulfillmentChannelCode ?? entry?.fulfillment_channel_code ?? null,
+      fulfillmentChannel:
+        entry?.fulfillmentChannelCode ??
+        entry?.fulfillment_channel_code ??
+        null,
       amount: offer?.price?.amount ? Number(offer.price.amount) : null,
       currency: offer?.price?.currencyCode ?? null,
-    } as { quantity: number|null; fulfillmentChannel: string|null; amount: number|null; currency: string|null };
+    } as {
+      quantity: number | null;
+      fulfillmentChannel: string | null;
+      amount: number | null;
+      currency: string | null;
+    };
   }
 }
 

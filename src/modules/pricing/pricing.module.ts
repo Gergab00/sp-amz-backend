@@ -5,8 +5,8 @@ import { PricingController } from './interface/http/pricing.controller';
 import { GetItemOffersUseCase } from './application/use-cases/get-item-offers.use-case';
 
 @Module({
-    imports: [SpapiModule],
-    providers: [PricingService, GetItemOffersUseCase],
-    controllers: [PricingController],
+  imports: [SpapiModule],
+  providers: [PricingService, GetItemOffersUseCase],
+  controllers: [PricingController],
 })
 export class PricingModule {}

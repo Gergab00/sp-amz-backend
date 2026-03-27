@@ -1,6 +1,10 @@
 // RUTA: /src/modules/listing/interface/middlewares/validate-listing-item.middleware.ts
 
-import { Injectable, NestMiddleware, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  BadRequestException,
+} from '@nestjs/common';
 import { validateSync } from 'class-validator';
 import { UpdateListingItemDto } from '../http/dto/update-listing-item.request-dto.interface';
 import { PatchListingItemDto } from '../http/dto/patch-listing-item.request-dto.interface';
@@ -22,7 +26,9 @@ export class ValidateListingItemMiddleware implements NestMiddleware {
     const errors = validateSync(dto);
 
     if (errors.length > 0) {
-      const errorMessages = errors.map(err => Object.values(err.constraints || {}).join(', ')).join('; ');
+      const errorMessages = errors
+        .map((err) => Object.values(err.constraints || {}).join(', '))
+        .join('; ');
       throw new BadRequestException(`Validación fallida: ${errorMessages}`);
     }
 
