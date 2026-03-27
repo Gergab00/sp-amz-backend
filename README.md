@@ -1,160 +1,226 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# sp-amz-backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Backend en NestJS para integracion con Amazon SP-API, organizado por modulos de negocio y capas tipo hexagonal (domain, application, interface, infrastructure).
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Estado Actual Del Proyecto
 
-## Description
+El repositorio contiene implementaciones por modulo para catalog, pricing, fees, listing y listings.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Estado de registro en runtime hoy:
 
-## Project setup
+- Registrado en AppModule: ConfigModule, HealthModule, SpapiModule.
+- Modulos de negocio: existen en codigo, pero no estan importados aun en el modulo raiz.
 
-```bash
-$ npm install
-```
+Implicacion:
 
-## Compile and run the project
+- Endpoints de negocio definidos en controladores aun no quedan activos mientras no se registren sus modulos en src/app.module.ts.
 
-```bash
-# development
-$ npm run start
+## Stack Tecnologico
 
-# watch mode
-$ npm run start:dev
+- NestJS 11 + TypeScript 5
+- Integracion Amazon SP-API con amazon-sp-api
+- Swagger/OpenAPI con @nestjs/swagger
+- Validacion con class-validator y class-transformer
+- Seguridad base con helmet
+- Preparacion de persistencia con mongoose/@nestjs-mongoose
+- Testing con jest, ts-jest y supertest
+- Calidad con ESLint 9 y Prettier
+- Flujo Git con Husky, Commitlint y semantic-release
 
-# production mode
-$ npm run start:prod
-```
+## Requisitos
 
-## Run tests
+- Node.js 20 o superior (recomendado)
+- npm para desarrollo local
+- pnpm (via Corepack) para flujos que dependen de pnpm-lock.yaml, como build de Docker/Railway
+
+## Instalacion
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-### Ejecutar test unitario del transformador
-
-Para ejecutar únicamente la especificación del transformador:
+Alternativa con pnpm:
 
 ```bash
-# ejecutar el test del util toStringArray
-$ npm run test -- src/common/utils/transformers.spec.ts
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
-## Deployment
+## Configuracion De Entorno
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Base de variables en .env.example.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Variables principales:
+
+- PORT (opcional): puerto HTTP. Si no se define, la app usa 5111.
+- NODE_ENV
+- SP_REGION
+- SP_REFRESH_TOKEN
+- SP_APP_CLIENT_ID
+- SP_APP_CLIENT_SECRET
+- SP_ENDPOINTS_VERSIONS__catalogItems
+
+Nota: en .env.example aparece PORT=3000; ese valor sobreescribe el default 5111 en runtime cuando se define.
+
+## Ejecucion Local
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# desarrollo con watch
+npm run start:dev
+
+# modo normal
+npm run start
+
+# modo debug
+npm run start:debug
+
+# build
+npm run build
+
+# produccion (requiere build previo)
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Configuracion HTTP De La Aplicacion
 
-## Resources
+Configuracion vigente en src/main.ts:
 
-Check out a few resources that may come in handy when working with NestJS:
+- Prefijo global de rutas: /api
+- Swagger UI: /api/docs
+- Scalar API Reference: /api/scalar
+- OpenAPI JSON: /api/docs-json
+- CORS habilitado para:
+  - https://sellercontrol-ui.gerardogabriel.dev
+  - http://localhost:3000
+  - http://localhost:3001
+  - http://localhost:3002
+- ValidationPipe global con:
+  - whitelist: true
+  - transform: true
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Endpoints Activos Hoy
 
-## Support
+Con el estado actual de AppModule, los endpoints activos son:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- GET /api/health
+- GET /api
+- GET /api/docs
+- GET /api/scalar
+- GET /api/docs-json
 
-## Stay in touch
+## Endpoints Implementados En Codigo (Pendientes De Registro En AppModule)
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Catalog:
 
-## License
+- GET /api/catalog/items/search
+- GET /api/catalog/items/:asin
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Pricing:
 
-## Flujo de Commits, Changelog y Releases
+- GET /api/pricing/items/:asin/offers
 
-Este repositorio integra Conventional Commits + Husky + Commitlint + Semantic Release para mantener versionado automatico y trazable.
+Fees:
 
-### Scripts Clave
+- POST /api/fees/asin-estimate
 
-En [package.json](package.json):
-- `prepare`: activa Husky (`husky install`).
-- `commitlint`: valida mensajes de commit.
-- `release`: ejecuta `semantic-release`.
-- `release:dry`: simulacion de release sin publicar.
+Listing:
 
-### Reglas de Mensajes de Commit
+- POST /api/listing/update
+- POST /api/listing/patch
 
-Definidas en [commitlint.config.cjs](commitlint.config.cjs):
-- formato Conventional Commits.
-- tipos permitidos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
-- tipo en minuscula.
-- asunto no vacio.
-- header maximo de 100 caracteres.
+Listings:
 
-Ejemplos:
+- GET /api/listings/mfn-quantity
+
+## Reglas De Validacion De Negocio Relevantes
+
+Catalog search:
+
+- Debe enviarse identifiers + identifiersType o keywords.
+- No se permite enviar ambos grupos a la vez.
+- Si identifiersType es SKU, sellerId es obligatorio.
+
+Fees estimate:
+
+- listingPriceAmount debe ser mayor a 0.
+- shippingAmount debe ser mayor o igual a 0.
+- listingPriceCurrency esta restringida a monedas soportadas.
+- shippingCurrency se valida contra set de monedas soportadas.
+
+## Estructura Del Proyecto
 
 ```text
-fix(auth): corrige validacion de API Key
-feat(api): agrega soporte para presigned URLs
-feat(api)!: cambia estructura de respuesta del upload
+src/
+  app.module.ts
+  main.ts
+  health/
+  modules/
+    catalog/
+    pricing/
+    fees/
+    listing/
+    listings/
+  shared/
+    infrastructure/http/spapi/
 ```
 
-### Hooks de Husky
+Cada modulo sigue separacion por capas:
 
-- [.husky/pre-commit](.husky/pre-commit): ejecuta `npm run lint` antes de permitir el commit.
-- [.husky/commit-msg](.husky/commit-msg): ejecuta commitlint sobre el mensaje del commit.
+- domain: reglas y tipos de negocio
+- application: casos de uso, DTOs y servicios orquestadores
+- interface: controladores HTTP y contratos de transporte
+- infrastructure: adapters, mappers e integraciones externas
 
-### Release Automatico
+## Scripts Disponibles
 
-Configurado en [.releaserc.json](.releaserc.json):
-- publica solo desde la rama `master`.
-- calcula version segun historial de commits.
-- genera/actualiza [CHANGELOG.md](CHANGELOG.md).
-- crea commit de release con `chore(release): x.y.z [skip ci]`.
-- crea tag `vX.Y.Z`.
-- publica GitHub Release.
+Compilacion y ejecucion:
 
-### GitHub Actions
+- npm run build
+- npm run start
+- npm run start:dev
+- npm run start:debug
+- npm run start:prod
 
-Pipeline en [.github/workflows/release.yml](.github/workflows/release.yml):
-- trigger por `push` a `master` o `workflow_dispatch`.
-- instala dependencias con `pnpm`.
-- ejecuta `pnpm run release` con `GITHUB_TOKEN`.
+Calidad:
 
-Nota de consistencia: el flujo de release de este repositorio apunta a `master`.
+- npm run lint
+- npm run format
+
+Testing:
+
+- npm run test
+- npm run test:watch
+- npm run test:cov
+- npm run test:debug
+- npm run test:e2e
+
+Ejemplo de test puntual:
+
+```bash
+npm run test -- src/shared/utils/transformers.spec.ts
+```
+
+Git y release:
+
+- npm run prepare
+- npm run commitlint
+- npm run release
+- npm run release:dry
+
+## Flujo De Commits, Changelog Y Releases
+
+Este repositorio usa Conventional Commits + Husky + Commitlint + semantic-release para versionado automatico.
+
+Reglas clave:
+
+- Commits con formato Conventional Commits (commitlint.config.cjs).
+- Hook pre-commit: ejecuta npm run lint.
+- Hook commit-msg: valida mensaje con commitlint.
+- Releases automaticos desde rama master (configurado en .releaserc.json).
+- Changelog en CHANGELOG.md y tag con formato vX.Y.Z.
+
+## Roadmap Tecnico Inmediato
+
+- Registrar modulos de negocio en src/app.module.ts para habilitar endpoints ya implementados.
+- Consolidar wiring por puertos/tokens en todos los modulos segun la guia hexagonal.
+- Completar cobertura de tests unitarios de mappers y use-cases en modulos fees/listing/listings.

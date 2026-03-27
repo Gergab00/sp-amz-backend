@@ -31,7 +31,9 @@ describe('GetFeesEstimateForAsinUseCase', () => {
       ],
     }).compile();
 
-    useCase = module.get<GetFeesEstimateForAsinUseCase>(GetFeesEstimateForAsinUseCase);
+    useCase = module.get<GetFeesEstimateForAsinUseCase>(
+      GetFeesEstimateForAsinUseCase,
+    );
     productFeesGateway = module.get('ProductFeesPort');
   });
 
@@ -43,7 +45,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         marketplaceId: 'A1AM78C64UM0Y8', // MX
         listingPriceAmount: 299.99,
         listingPriceCurrency: 'MXN',
-        shippingAmount: 50.00,
+        shippingAmount: 50.0,
         shippingCurrency: 'MXN',
         isAmazonFulfilled: false,
       };
@@ -55,16 +57,16 @@ describe('GetFeesEstimateForAsinUseCase', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'MXN',
-                Amount: 75.50,
+                Amount: 75.5,
               },
               FeeDetailList: [
                 {
                   FeeType: 'ReferralFee',
-                  FeeAmount: { CurrencyCode: 'MXN', Amount: 45.00 },
+                  FeeAmount: { CurrencyCode: 'MXN', Amount: 45.0 },
                 },
                 {
                   FeeType: 'VariableClosingFee',
-                  FeeAmount: { CurrencyCode: 'MXN', Amount: 30.50 },
+                  FeeAmount: { CurrencyCode: 'MXN', Amount: 30.5 },
                 },
               ],
             },
@@ -72,13 +74,15 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       const result = await useCase.execute(dto);
 
       expect(result).toBeDefined();
       expect(result.currency).toBe('MXN');
-      expect(result.totalFeesEstimate).toBe(75.50);
+      expect(result.totalFeesEstimate).toBe(75.5);
       expect(result.feeBreakdown).toHaveLength(2);
       expect(productFeesGateway.getMyFeesEstimateForASIN).toHaveBeenCalledWith({
         asin: dto.asin,
@@ -106,7 +110,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'USD',
-                Amount: 3.50,
+                Amount: 3.5,
               },
               FeeDetailList: [],
             },
@@ -114,12 +118,14 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       const result = await useCase.execute(dto);
 
       expect(result).toBeDefined();
-      expect(result.totalFeesEstimate).toBe(3.50);
+      expect(result.totalFeesEstimate).toBe(3.5);
     });
   });
 
@@ -131,7 +137,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         marketplaceId: 'A1AM78C64UM0Y8',
         listingPriceAmount: 299.99,
         listingPriceCurrency: 'MXN',
-        shippingAmount: 50.00,
+        shippingAmount: 50.0,
         shippingCurrency: 'USD', // Diferente!
       };
 
@@ -186,7 +192,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'USD',
-                Amount: 3.50,
+                Amount: 3.5,
               },
               FeeDetailList: [],
             },
@@ -194,7 +200,9 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       // No debería lanzar error, solo warning en logs
       const result = await useCase.execute(dto);
@@ -224,12 +232,12 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);
-      await expect(useCase.execute(dto)).rejects.toThrow(
-        'ASIN inválido',
-      );
+      await expect(useCase.execute(dto)).rejects.toThrow('ASIN inválido');
     });
 
     it('debe lanzar NotFoundException con mensaje genérico si no hay error en respuesta', async () => {
@@ -245,7 +253,9 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         payload: {},
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);
       await expect(useCase.execute(dto)).rejects.toThrow(
@@ -265,9 +275,13 @@ describe('GetFeesEstimateForAsinUseCase', () => {
       };
 
       const gatewayError = new Error('SP-API connection timeout');
-      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(gatewayError);
+      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(
+        gatewayError,
+      );
 
-      await expect(useCase.execute(dto)).rejects.toThrow('SP-API connection timeout');
+      await expect(useCase.execute(dto)).rejects.toThrow(
+        'SP-API connection timeout',
+      );
     });
 
     it('debe propagar NotFoundException del gateway', async () => {
@@ -279,7 +293,9 @@ describe('GetFeesEstimateForAsinUseCase', () => {
       };
 
       const notFoundError = new NotFoundException('ASIN no encontrado');
-      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(notFoundError);
+      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(
+        notFoundError,
+      );
 
       await expect(useCase.execute(dto)).rejects.toThrow(NotFoundException);
       await expect(useCase.execute(dto)).rejects.toThrow('ASIN no encontrado');
@@ -294,10 +310,14 @@ describe('GetFeesEstimateForAsinUseCase', () => {
       };
 
       const badRequestError = new BadRequestException('Parámetros inválidos');
-      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(badRequestError);
+      productFeesGateway.getMyFeesEstimateForASIN.mockRejectedValue(
+        badRequestError,
+      );
 
       await expect(useCase.execute(dto)).rejects.toThrow(BadRequestException);
-      await expect(useCase.execute(dto)).rejects.toThrow('Parámetros inválidos');
+      await expect(useCase.execute(dto)).rejects.toThrow(
+        'Parámetros inválidos',
+      );
     });
   });
 
@@ -309,7 +329,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         marketplaceId: 'A1AM78C64UM0Y8',
         listingPriceAmount: 299.99,
         listingPriceCurrency: 'MXN',
-        shippingAmount: 50.00,
+        shippingAmount: 50.0,
         shippingCurrency: 'MXN',
         isAmazonFulfilled: true,
       };
@@ -321,7 +341,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'MXN',
-                Amount: 75.50,
+                Amount: 75.5,
               },
               FeeDetailList: [],
             },
@@ -329,17 +349,21 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       await useCase.execute(dto);
 
-      expect(productFeesGateway.getMyFeesEstimateForASIN).toHaveBeenCalledTimes(1);
+      expect(productFeesGateway.getMyFeesEstimateForASIN).toHaveBeenCalledTimes(
+        1,
+      );
       expect(productFeesGateway.getMyFeesEstimateForASIN).toHaveBeenCalledWith({
         asin: 'B0DB3R4XSN',
         marketplaceId: 'A1AM78C64UM0Y8',
         listingPriceAmount: 299.99,
         listingPriceCurrency: 'MXN',
-        shippingAmount: 50.00,
+        shippingAmount: 50.0,
         shippingCurrency: 'MXN',
         isAmazonFulfilled: true,
       });
@@ -361,7 +385,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
             FeesEstimate: {
               TotalFeesEstimate: {
                 CurrencyCode: 'USD',
-                Amount: 3.50,
+                Amount: 3.5,
               },
               FeeDetailList: [],
             },
@@ -369,7 +393,9 @@ describe('GetFeesEstimateForAsinUseCase', () => {
         },
       };
 
-      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(spapiResponse);
+      productFeesGateway.getMyFeesEstimateForASIN.mockResolvedValue(
+        spapiResponse,
+      );
 
       await useCase.execute(dto);
 
@@ -389,13 +415,13 @@ describe('GetFeesEstimateForAsinUseCase', () => {
 /** =============================================================
  * ARQUITECTURA LIMPIA:
  * Estos tests cumplen con Clean Architecture al:
- * 
+ *
  * 1. AISLAMIENTO DEL USE CASE:
  *    - Mockea ProductFeesPort para aislar lógica de negocio
  *    - No depende de implementaciones reales del gateway
  *    - Usa Testing Module de NestJS para DI correcta
  *    - Verifica comportamiento sin efectos secundarios
- * 
+ *
  * 2. COBERTURA COMPLETA:
  *    - Happy path: Estimación exitosa con/sin shipping
  *    - Validaciones de negocio: Todas las reglas verificadas
@@ -403,39 +429,39 @@ describe('GetFeesEstimateForAsinUseCase', () => {
  *    - Manejo de errores: Propagación correcta de excepciones
  *    - Llamadas al gateway: Verificación de parámetros
  *    - Total: 14 tests cubriendo > 95% del código
- * 
+ *
  * 3. TESTS AISLADOS:
  *    - Cada test valida un escenario específico
  *    - Setup común en beforeEach
  *    - No hay dependencias entre tests
  *    - Nomenclatura descriptiva (debe...)
- * 
+ *
  * 4. VALIDACIÓN DE REGLAS DE NEGOCIO:
  *    - Shipping currency debe coincidir con listing currency
  *    - Listing price debe ser > 0
  *    - Shipping amount no puede ser negativo
  *    - Moneda diferente al marketplace solo genera warning
- * 
+ *
  * 5. VERIFICACIÓN DE ORQUESTACIÓN:
  *    - Gateway llamado con parámetros correctos
  *    - Mapper integrado correctamente
  *    - Errores manejados apropiadamente
  *    - Logging implícito (no testeado pero presente)
- * 
+ *
  * CÓMO EXTENDER:
  * - Nuevas validaciones: Agrega tests en describe('Validaciones de Negocio')
  * - Nuevos escenarios de error: Agrega en describe('Manejo de Errores')
  * - Casos edge del mapper: Agrega en describe('Integración con Mapper')
  * - Validaciones de parámetros: Agrega en describe('Llamadas al Gateway')
  * - Tests de performance: Crea describe('Performance') con timeouts
- * 
+ *
  * CÓMO MODIFICAR:
  * - Si cambian validaciones: Actualiza tests en sección correspondiente
  * - Para nuevos parámetros: Agrega verificaciones en gateway calls
  * - Si cambia mapper: Actualiza mocks de respuesta SP-API
  * - Para nuevas excepciones: Agrega tests de propagación
  * - Si cambia flujo: Actualiza happy path y verificaciones
- * 
+ *
  * COBERTURA:
  * - Happy path: 2 tests
  * - Validaciones de negocio: 4 tests
@@ -443,7 +469,7 @@ describe('GetFeesEstimateForAsinUseCase', () => {
  * - Manejo de errores: 3 tests
  * - Llamadas al gateway: 2 tests
  * - Total: 14 tests cubriendo > 95%
- * 
+ *
  * NOTAS:
  * - Los mocks usan jest.Mocked<> para type safety
  * - Testing Module de NestJS maneja DI correctamente

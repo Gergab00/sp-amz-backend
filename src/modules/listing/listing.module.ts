@@ -9,7 +9,11 @@ import { ValidateListingItemMiddleware } from './interface/middlewares/validate-
 @Module({
   imports: [SpapiModule],
   controllers: [ListingController],
-  providers: [ListingService, UpdateListingItemUseCase, PatchListingItemUseCase],
+  providers: [
+    ListingService,
+    UpdateListingItemUseCase,
+    PatchListingItemUseCase,
+  ],
 })
 export class ListingModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

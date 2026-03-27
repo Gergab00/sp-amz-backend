@@ -9,7 +9,7 @@ export class MfnQuantity {
     public readonly marketplaceId: string,
     private _quantity: number,
     public readonly fulfillmentChannel: string,
-    public readonly raw?: any // Datos crudos opcionales de SP-API
+    public readonly raw?: any, // Datos crudos opcionales de SP-API
   ) {
     this.validate();
   }
@@ -22,9 +22,15 @@ export class MfnQuantity {
     marketplaceId: string,
     quantity: number,
     fulfillmentChannel: string,
-    raw?: any
+    raw?: any,
   ): MfnQuantity {
-    return new MfnQuantity(sku, marketplaceId, quantity, fulfillmentChannel, raw);
+    return new MfnQuantity(
+      sku,
+      marketplaceId,
+      quantity,
+      fulfillmentChannel,
+      raw,
+    );
   }
 
   /**
@@ -51,8 +57,13 @@ export class MfnQuantity {
     }
 
     const validChannels = ['DEFAULT', 'MFN', 'AFN', 'Amazon_NA'];
-    if (!this.fulfillmentChannel || !validChannels.includes(this.fulfillmentChannel)) {
-      throw new Error(`Invalid fulfillment channel: ${this.fulfillmentChannel}. Valid channels: ${validChannels.join(', ')}`);
+    if (
+      !this.fulfillmentChannel ||
+      !validChannels.includes(this.fulfillmentChannel)
+    ) {
+      throw new Error(
+        `Invalid fulfillment channel: ${this.fulfillmentChannel}. Valid channels: ${validChannels.join(', ')}`,
+      );
     }
   }
 
@@ -81,7 +92,9 @@ export class MfnQuantity {
       throw new Error('Quantity to reduce must be positive');
     }
     if (!this.canFulfillOrder(quantity)) {
-      throw new Error(`Insufficient quantity available. Available: ${this._quantity}, Requested: ${quantity}`);
+      throw new Error(
+        `Insufficient quantity available. Available: ${this._quantity}, Requested: ${quantity}`,
+      );
     }
     this._quantity -= quantity;
   }
@@ -109,7 +122,10 @@ export class MfnQuantity {
   /**
    * Obtiene el nivel de stock (low, medium, high)
    */
-  getStockLevel(lowThreshold = 10, highThreshold = 50): 'out-of-stock' | 'low' | 'medium' | 'high' {
+  getStockLevel(
+    lowThreshold = 10,
+    highThreshold = 50,
+  ): 'out-of-stock' | 'low' | 'medium' | 'high' {
     if (this._quantity === 0) return 'out-of-stock';
     if (this._quantity < lowThreshold) return 'low';
     if (this._quantity < highThreshold) return 'medium';
@@ -131,7 +147,7 @@ export class MfnQuantity {
  * - Comportamiento de negocio (isAvailable, canFulfillOrder, etc.)
  * - Encapsulación de datos (quantity privado con getter)
  * - Factory method para creación controlada
- * 
+ *
  * Cumple con arquitectura hexagonal:
  * - No depende de infraestructura (sin imports de BD, HTTP, etc.)
  * - Contiene lógica de dominio pura

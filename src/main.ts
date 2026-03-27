@@ -14,7 +14,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-
+import { apiReference } from '@scalar/express-api-reference';
 
 // ANCHOR: bootstrap
 /**
@@ -50,7 +50,24 @@ async function bootstrap() {
   });
 
   // INFO: Seguridad básica por cabeceras (helmet) y validación de entrada.
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", 'https://cdn.jsdelivr.net', "'unsafe-inline'"],
+          scriptSrcAttr: ["'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+          imgSrc: ["'self'", 'data:', 'https:'],
+          fontSrc: ["'self'", 'data:', 'https:'],
+          connectSrc: ["'self'", 'https:'],
+          objectSrc: ["'none'"],
+          baseUri: ["'self'"],
+          frameAncestors: ["'self'"],
+        },
+      },
+    }),
+  );
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   // SECTION: swagger
@@ -69,6 +86,14 @@ async function bootstrap() {
   // INFO: Genera el documento OpenAPI y lo monta en la aplicación.
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+
+  app.use(
+    '/api/scalar',
+    apiReference({
+      title: 'MarketSync SP-API Reference',
+      content: document,
+    }),
+  );
 
   //INFO: Sirve OpenAPI JSON como middleware de Express
   app.use('/api/docs-json', (req, res) => {

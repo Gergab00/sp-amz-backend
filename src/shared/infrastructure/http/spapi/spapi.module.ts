@@ -4,7 +4,6 @@ import { Module } from '@nestjs/common';
 import { SpapiClient } from './spapi.client';
 
 @Module({
-
   providers: [SpapiClient],
   exports: [SpapiClient],
 })

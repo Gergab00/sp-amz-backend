@@ -96,6 +96,22 @@ Reglas de dependencia:
 - Si se detecta inconsistencia estructural, preferir correccion incremental en el modulo tocado, no refactor masivo no solicitado.
 - Mantener compatibilidad de contratos HTTP existentes salvo requerimiento explicito.
 
+## Politica de README (obligatoria)
+En cada cambio importante se debe actualizar `README.md` en el mismo PR.
+
+Se considera cambio importante cuando se modifica al menos uno de estos puntos:
+- Stack o dependencias principales.
+- Variables de entorno, configuracion de arranque o puertos.
+- Endpoints, contratos HTTP, autenticacion o validaciones de entrada.
+- Estructura de modulos/capas o flujo arquitectonico.
+- Scripts de ejecucion, testing, lint o release.
+
+Checklist minimo obligatorio para actualizar README en esos casos:
+1. Ajustar secciones afectadas (setup, config, endpoints, scripts, arquitectura).
+2. Verificar que comandos y rutas documentadas existan en el codigo actual.
+3. Documentar estado real (por ejemplo, modulo implementado pero no registrado en `AppModule`).
+4. Evitar contenido generico no aplicable al repositorio.
+
 ## Guia operativa para Copilot
 Cuando generes codigo en este repo:
 1. Primero ubica el modulo de negocio correcto.
@@ -104,6 +120,7 @@ Cuando generes codigo en este repo:
 4. Implementa/usa puertos para desacoplar use-cases de adapters.
 5. Añade Swagger y tests minimos asociados al cambio.
 6. Verifica que los imports respeten aliases y rutas del proyecto.
+7. Si el cambio es importante, actualiza `README.md` en el mismo ciclo de trabajo antes de cerrar la tarea.
 
 ## Protocolo Engram (obligatorio)
 Antes de iniciar cualquier tarea:

@@ -7,15 +7,18 @@ import { IsString, Length } from 'class-validator';
  * ============================================================= */
 export class GetMfnQuantityDto {
   @ApiProperty({ example: 'A1UCRBGKQ8T9I5' })
-  @IsString() @Length(5, 20)
+  @IsString()
+  @Length(5, 20)
   sellerId!: string;
 
   @ApiProperty({ example: 'B0DB3R4XSN' })
-  @IsString() @Length(1, 40)
+  @IsString()
+  @Length(1, 40)
   sku!: string;
 
   @ApiProperty({ example: 'A1AM78C64UM0Y8', description: 'MX' })
-  @IsString() @Length(10, 20)
+  @IsString()
+  @Length(10, 20)
   marketplaceId!: string;
 }
 

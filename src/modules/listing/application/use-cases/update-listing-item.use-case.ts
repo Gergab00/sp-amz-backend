@@ -23,7 +23,9 @@ export class UpdateListingItemUseCase {
   async execute(dto: UpdateListingItemDto): Promise<any> {
     const errors = validateSync(dto);
     if (errors.length > 0) {
-      const errorMessages = errors.map(err => Object.values(err.constraints || {}).join(', ')).join('; ');
+      const errorMessages = errors
+        .map((err) => Object.values(err.constraints || {}).join(', '))
+        .join('; ');
       throw new Error(`Validación fallida: ${errorMessages}`);
     }
 
