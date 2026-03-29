@@ -1,6 +1,6 @@
 // RUTA: /src/modules/catalog/interface/http/catalog.controller.ts
 // ANCHOR: catalog-controller
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Param, Query, Req } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiTags,
@@ -11,10 +11,13 @@ import {
 import { CatalogService } from '../../application/services/catalog.service';
 import { GetCatalogItemDto } from '../../application/dto/get-catalog-item.dto';
 import { SearchCatalogItemsDto } from '../../application/dto/search-catalog-items.dto';
+import type { Request } from 'express';
 
 @ApiTags('Catalog')
 @Controller('catalog')
 export class CatalogController {
+  private readonly logger = new Logger(CatalogController.name);
+
   constructor(private readonly service: CatalogService) {}
 
   @Get('items/search')
@@ -53,6 +56,8 @@ export class CatalogController {
     name: 'keywords',
     required: false,
     type: [String],
+    isArray: true,
+    example: ['barbie', 'headbanz'],
     description: 'Palabras clave para búsqueda',
   })
   @ApiQuery({
