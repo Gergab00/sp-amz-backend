@@ -21,7 +21,7 @@ export class SearchCatalogItemsDto {
   @Transform(({ value }) => (Array.isArray(value) ? value : [value]))
   @IsArray()
   @IsString({ each: true })
-  marketplaceIds: string[];
+  marketplaceIds!: string[];
 
   /**
    * Lista de identificadores de producto (ASIN, SKU, etc.).
@@ -58,6 +58,7 @@ export class SearchCatalogItemsDto {
    */
   @ApiProperty({
     description: 'ID del vendedor (requerido si identifiersType = SKU)',
+    example: 'A1UCRBGKQ8T9I5',
     required: false,
   })
   @IsOptional()
@@ -74,9 +75,14 @@ export class SearchCatalogItemsDto {
     required: false,
   })
   @IsOptional()
-  @Transform(({ value }) =>
-    value ? (Array.isArray(value) ? value : [value]) : undefined,
-  )
+  @Transform(({ value }) => {
+    if (value === undefined || value === null || value === '') return undefined;
+    const arr = Array.isArray(value) ? value : String(value).split(',');
+    const cleaned = arr
+      .map((v: string) => v.trim())
+      .filter((v: string) => v.length > 0);
+    return cleaned.length > 0 ? cleaned : undefined;
+  })
   @IsArray()
   @IsString({ each: true })
   keywords?: string[];
