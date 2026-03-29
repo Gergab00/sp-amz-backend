@@ -14,7 +14,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { apiReference } from '@scalar/express-api-reference';
 
 // ANCHOR: bootstrap
 /**
@@ -29,6 +28,8 @@ import { apiReference } from '@scalar/express-api-reference';
  * @async
  */
 async function bootstrap() {
+  const { apiReference } = await import('@scalar/express-api-reference');
+
   // INFO: Crea la aplicación NestJS a partir del módulo raíz.
   const app = await NestFactory.create(AppModule);
 
@@ -46,7 +47,7 @@ async function bootstrap() {
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'x-api-key'],
   });
 
   // INFO: Seguridad básica por cabeceras (helmet) y validación de entrada.
@@ -80,12 +81,25 @@ async function bootstrap() {
     .setTitle('MarketSync SP-API')
     .setDescription('Backend NestJS para Amazon SP‑API')
     .setVersion('v1')
-    .addBearerAuth({ type: 'http', scheme: 'bearer' }, 'bearer')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-api-key',
+        description: 'API key requerida para consumir endpoints protegidos',
+      },
+      'x-api-key',
+    )
+    .addSecurityRequirements('x-api-key')
     .build();
 
   // INFO: Genera el documento OpenAPI y lo monta en la aplicación.
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/api/docs', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    },
+  });
 
   app.use(
     '/api/scalar',
