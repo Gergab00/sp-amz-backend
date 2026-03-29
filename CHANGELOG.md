@@ -1,3 +1,15 @@
+# [1.2.0](https://github.com/Gergab00/sp-amz-backend/compare/v1.1.0...v1.2.0) (2026-03-29)
+
+
+### Bug Fixes
+
+* **catalog:** endurecer validacion y normalizar query arrays ([3c773e0](https://github.com/Gergab00/sp-amz-backend/commit/3c773e03eb76e32bebbf7d59596e8283d6a02036))
+
+
+### Features
+
+* **auth:** agregar guard global por api key ([1f9f930](https://github.com/Gergab00/sp-amz-backend/commit/1f9f930d9d5f8a85eb7062a694dd5c088c35e65c))
+
 # [1.1.0](https://github.com/Gergab00/sp-amz-backend/compare/v1.0.0...v1.1.0) (2026-03-27)
 
 
