@@ -8,12 +8,11 @@ El repositorio contiene implementaciones por modulo para catalog, pricing, fees,
 
 Estado de registro en runtime hoy:
 
-- Registrado en AppModule: ConfigModule, HealthModule, SpapiModule.
-- Modulos de negocio: existen en codigo, pero no estan importados aun en el modulo raiz.
+- Registrado en AppModule: ConfigModule, HealthModule, CatalogModule, PricingModule, FeesModule, ListingModule, ListingsModule y SpapiModule.
 
 Implicacion:
 
-- Endpoints de negocio definidos en controladores aun no quedan activos mientras no se registren sus modulos en src/app.module.ts.
+- Los endpoints de negocio definidos en los controladores quedan activos en runtime y se exponen en Swagger/OpenAPI.
 
 ## Stack Tecnologico
 
@@ -21,7 +20,7 @@ Implicacion:
 - Integracion Amazon SP-API con amazon-sp-api
 - Swagger/OpenAPI con @nestjs/swagger
 - Validacion con class-validator y class-transformer
-- Seguridad base con helmet
+- Seguridad con helmet + API key global por header x-api-key
 - Preparacion de persistencia con mongoose/@nestjs-mongoose
 - Testing con jest, ts-jest y supertest
 - Calidad con ESLint 9 y Prettier
@@ -54,6 +53,7 @@ Variables principales:
 
 - PORT (opcional): puerto HTTP. Si no se define, la app usa 5111.
 - NODE_ENV
+- API_KEY: llave compartida para autenticar llamadas externas via header x-api-key.
 - SP_REGION
 - SP_REFRESH_TOKEN
 - SP_APP_CLIENT_ID
@@ -81,6 +81,11 @@ npm run build
 npm run start:prod
 ```
 
+Notas operativas:
+
+- Para pnpm usa `pnpm run start:dev`.
+- El build incremental de Nest ahora guarda su metadata dentro de `dist/` para evitar el caso en que `deleteOutDir` borra la salida compilada pero deja un `tsconfig*.tsbuildinfo` viejo en la raiz y el watch termina intentando ejecutar `dist/main` sin haber reemitido archivos.
+
 ## Configuracion HTTP De La Aplicacion
 
 Configuracion vigente en src/main.ts:
@@ -89,26 +94,77 @@ Configuracion vigente en src/main.ts:
 - Swagger UI: /api/docs
 - Scalar API Reference: /api/scalar
 - OpenAPI JSON: /api/docs-json
+- Swagger declara autenticacion global por API key en header x-api-key
+- Swagger conserva la autorizacion cargada en la UI durante la sesion del navegador
 - CORS habilitado para:
   - https://sellercontrol-ui.gerardogabriel.dev
   - http://localhost:3000
   - http://localhost:3001
   - http://localhost:3002
+- Header permitido para autenticacion: x-api-key
 - ValidationPipe global con:
   - whitelist: true
   - transform: true
+- Guard global de autenticacion por API key (APP_GUARD)
+- Rutas publicas sin API key:
+  - GET /api/health
+  - GET /api/docs
+  - GET /api/scalar
+  - GET /api/docs-json
+
+## Autenticacion API Key
+
+La aplicacion valida el header `x-api-key` en cada request protegida contra el valor de `API_KEY` definido en el entorno.
+
+Comportamiento:
+
+- Si falta `API_KEY` en el entorno, la aplicacion responde 500 en endpoints protegidos.
+- Si falta `x-api-key` o no coincide, responde 401.
+- `health` y la documentacion quedan publicos para observabilidad y exploracion de API.
+
+Genera una API Key segura con Node.js:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+> ⚠️ Nunca subas `.env` al repositorio. Contiene credenciales y secretos.
+
+Ejemplo:
+
+```bash
+curl -H "x-api-key: <tu_api_key>" http://localhost:5111/api
+```
 
 ## Endpoints Activos Hoy
 
 Con el estado actual de AppModule, los endpoints activos son:
 
 - GET /api/health
-- GET /api
+- GET /api (protegido por API key)
 - GET /api/docs
 - GET /api/scalar
 - GET /api/docs-json
+- GET /api/catalog/items/search
+- GET /api/catalog/items/:asin
+- GET /api/pricing/items/:asin/offers
+- POST /api/fees/asin-estimate
+- POST /api/listing/update
+- POST /api/listing/patch
+- GET /api/listings/mfn-quantity
 
-## Endpoints Implementados En Codigo (Pendientes De Registro En AppModule)
+## Uso De Swagger Con API Key
+
+La UI de Swagger expone el boton Authorize para cargar x-api-key una sola vez y enviarlo automaticamente en todos los endpoints protegidos del documento.
+
+Flujo recomendado:
+
+- Abrir /api/docs
+- Pulsar Authorize
+- Ingresar el valor de x-api-key
+- Ejecutar requests desde Swagger sin volver a escribir el header en cada endpoint
+
+## Endpoints De Negocio Expuestos
 
 Catalog:
 
