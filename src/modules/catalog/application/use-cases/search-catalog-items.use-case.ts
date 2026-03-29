@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SpapiClient } from '../../../../shared/infrastructure/http/spapi/spapi.client';
 import { SearchCatalogItemsDto } from '../dto/search-catalog-items.dto';
 import { CatalogItemMapper } from '../../infrastructure/mappers/catalog-item.mapper.infrastructure';
 import { SearchCatalogItemsValidator } from '../../domain/validators/search-catalog-items.validator';
 import { SearchCatalogItemsParamsAdapter } from '../../infrastructure/adapters/search-catalog-items-params.adapter';
-import { number } from 'joi';
 
 // ANCHOR: search-catalog-items-use-case
 /**
@@ -14,6 +13,8 @@ import { number } from 'joi';
  */
 @Injectable()
 export class SearchCatalogItemsUseCase {
+  private readonly logger = new Logger(SearchCatalogItemsUseCase.name);
+
   /**
    * @param spapiClient Cliente de infraestructura para llamadas a Amazon SP-API
    */
@@ -33,7 +34,7 @@ export class SearchCatalogItemsUseCase {
     // SECTION: llamada al cliente SP-API
     const response = await this.spapiClient.callAPI(params);
 
-    console.log('SP-API Response:', response);
+    this.logger.debug(`SP-API response: ${JSON.stringify(response)}`);
 
     // SECTION: mapeo de la respuesta al dominio y paginación
     return {
