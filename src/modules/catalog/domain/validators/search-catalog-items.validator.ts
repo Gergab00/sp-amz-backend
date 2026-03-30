@@ -11,7 +11,9 @@ export class SearchCatalogItemsValidator {
     const identifiers = this.normalizeStringArray(dto.identifiers);
     const keywords = this.normalizeStringArray(dto.keywords);
 
-    const hasIdentifiers = Boolean(dto.identifiersType && identifiers.length > 0);
+    const hasIdentifiers = Boolean(
+      dto.identifiersType && identifiers.length > 0,
+    );
     const hasKeywords = keywords.length > 0;
 
     if (!hasIdentifiers && !hasKeywords) {

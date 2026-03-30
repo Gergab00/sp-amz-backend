@@ -71,7 +71,9 @@ describe('ApiKeyGuard', () => {
       headers: { 'x-api-key': 'abc' },
     });
 
-    expect(() => guard.canActivate(context)).toThrow(InternalServerErrorException);
+    expect(() => guard.canActivate(context)).toThrow(
+      InternalServerErrorException,
+    );
   });
 
   it('debe lanzar 401 cuando la API key esta ausente', () => {
